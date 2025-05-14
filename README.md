@@ -33,17 +33,17 @@
   
 ---
 
-## Как получить данные:
+## Как получить данные
 
-### DEVMAN_TOKEN:
+### DEVMAN_TOKEN
 1. Перейдите в настройки своего аккаунта на [DevMan](https://dvmn.org/).
 2. Найдите раздел **"API-токен"** и скопируйте его.
 
-### TELEGRAM_TOKEN:
+### TELEGRAM_TOKEN
 1. Создайте бота через [@BotFather](https://t.me/BotFather) в Telegram.
 2. Получите токен в формате `123456789:ABCdefGHIJKLMNOPQRSTUVWxyz`.
 
-### CHAT_ID:
+### CHAT_ID
 1. Используйте бота **@userinfobot** для получения своего `chat_id`.
 
 ---
