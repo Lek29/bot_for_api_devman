@@ -22,19 +22,20 @@ def main():
     except EnvError as e:
         print(f'Ошибка конфигурации в main.py: Не удалось загрузить одну из переменных '
               f'(DEVMAN_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID). Ошибка: {e}')
+        return
 
     current_timestamp = None
     while True:
         print('--------------------------Начинаем постоянный опрос сервера ------------------------')
         try:
             devman_response = get_devman_review_with_polling(devman_longpoiling_url, DEVMAN_TOKEN, current_timestamp)
-            status = devman_response['status']
+            status = devman_response.get('status')
             print(f'--- Ответ API получен, статус: {status} ---')
 
             if status == 'found':
                 print('Обнаружены новые проверки')
                 current_timestamp = devman_response.get('last_attempt_timestamp', 'ошибка получения current_timestamp')
-                new_attempts = devman_response.get('new_attempts', 'ошибка получения new_attempts')
+                new_attempts = devman_response.get('new_attempts', [])
 
                 if isinstance(new_attempts, list):
                     for attempt in new_attempts:
@@ -55,14 +56,14 @@ def main():
                     print(f'new_attempts не является списком. Получено {type(new_attempts)}')
             elif status == 'timeout':
                 print('Новых проверок нет. Делаем новый запрос.')
-                current_timestamp = devman_response.get('timestump_to_requsts')
+                current_timestamp = devman_response.get('timestamp_to_request')
 
 
-        except requests.exceptions.ReadTimeout as e:
-            print(f'Ошибка. Сервер не ответил за необходимое время. Ошибка {e}')
+        except requests.exceptions.ReadTimeout:
+            pass
         except requests.exceptions.ConnectionError as e:
             print(f'Сеть пропала. Ошибка {e}')
-        time.sleep(5)
+            time.sleep(5)
 
 
 if __name__ == '__main__':
