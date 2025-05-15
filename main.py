@@ -39,15 +39,24 @@ def main():
                 current_timestump = review_data.get('last_attempt_timestamp', 'ошибка получения current_timestamp')
                 new_attempts = review_data.get('new_attempts', 'ошибка получения new_attempts')
 
-                for attempt in new_attempts:
-                    result_check = format_review_notification(attempt)
-                    print('---- Детали новых проверок ----')
-                    pprint(new_attempts)
-                    send_telegram_greeting(
-                        message_text=result_check,
-                        bot_token=TELEGRAM_BOT_TOKEN,
-                        chat_id=TELEGRAM_CHAT_ID
-                    )
+                if isinstance(new_attempts, list):
+                    for attempt in new_attempts:
+                        result_check = format_review_notification(attempt)
+                        print('---- Детали новых проверок ----')
+                        pprint(new_attempts)
+                        success, tlg_response_info =(
+                            send_telegram_greeting(
+                            message_text=result_check,
+                            bot_token=TELEGRAM_BOT_TOKEN,
+                            chat_id=TELEGRAM_CHAT_ID
+                            )
+                        )
+                        if success:
+                            print(tlg_response_info)
+                        else:
+                            print(f'Ошибка отправки сообщения в Telegram: {tlg_response_info}')
+                else:
+                    print(f'new_attempts не является списком. Получено {type(new_attempts)}')
             elif status == 'timeout':
                 print('Новых проверок нет. Делаем новый запрос.')
                 current_timestump = review_data.get('timestump_to_requsts')
