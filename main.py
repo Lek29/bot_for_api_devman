@@ -7,7 +7,7 @@ from api_devman import get_devman_reviews
 from send_telegram_message import (format_review_notification,
                                    send_telegram_greeting)
 
-devman_longpoiling_url = 'https://dvmn.org/api/long_polling/'
+DEVMAN_LONGPOILING_URL = 'https://dvmn.org/api/long_polling/'
 
 
 def main():
@@ -15,19 +15,19 @@ def main():
     env.read_env()
 
     try:
-        DEVMAN_TOKEN = env.str('DEVMAN_TOKEN')
-        TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_TOKEN')
-        TELEGRAM_CHAT_ID = env.str('TELEGRAM_CHAT_ID')
+        devman_token = env.str('devman_token')
+        telegram_bot_token = env.str('TELEGRAM_TOKEN')
+        telegram_chat_id = env.str('telegram_chat_id')
     except EnvError as e:
         print(f'Ошибка конфигурации в main.py: Не удалось загрузить одну из переменных '
-              f'(DEVMAN_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID). Ошибка: {e}')
+              f'(devman_token, telegram_bot_token, telegram_chat_id). Ошибка: {e}')
         return
 
     current_timestamp = None
     while True:
         print('--------------------------Начинаем постоянный опрос сервера ------------------------')
         try:
-            devman_response = get_devman_reviews(devman_longpoiling_url, DEVMAN_TOKEN, current_timestamp)
+            devman_response = get_devman_reviews(DEVMAN_LONGPOILING_URL, devman_token, current_timestamp)
             status = devman_response.get('status')
             print(f'--- Ответ API получен, статус: {status} ---')
 
@@ -43,8 +43,8 @@ def main():
                         success, telegram_dispatch_details = (
                             send_telegram_greeting(
                                 message_text=result_check,
-                                bot_token=TELEGRAM_BOT_TOKEN,
-                                chat_id=TELEGRAM_CHAT_ID
+                                bot_token=telegram_bot_token,
+                                chat_id=telegram_chat_id
                             )
                         )
                         if success:
