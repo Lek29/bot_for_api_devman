@@ -15,5 +15,5 @@ def format_review_notification(attempt):
     lesson_tittle = attempt.get('lesson_title')
     lesson_url = attempt.get('lesson_url')
     is_negative = attempt.get('is_negative')
-    result = 'Работа проверена, есть ошибки' if is_negative else 'Работа принята'
-    return f'{result} \n \nУрок: "{lesson_tittle}" \n \nСсылка: {lesson_url}'
+    notification_message = 'Работа проверена, есть ошибки' if is_negative else 'Работа принята'
+    return f'{notification_message} \n \nУрок: "{lesson_tittle}" \n \nСсылка: {lesson_url}'
