@@ -2,7 +2,6 @@ import telegram
 
 
 def send_telegram_greeting(message_text, bot_token, chat_id):
-    print(f"send_telegram_greeting ПОЛУЧИЛ: bot_token='{bot_token}', chat_id='{chat_id}'")
     bot = telegram.Bot(token=bot_token)
     try:
         bot.send_message(chat_id=chat_id, text=message_text)
