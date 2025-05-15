@@ -3,7 +3,7 @@ import requests
 REQUEST_TIMEOUT_SECONDS = 100
 
 
-def get_devman_review_with_polling(api_url, token, current_timestamp, timeout_val=REQUEST_TIMEOUT_SECONDS):
+def get_devman_reviews(api_url, token, current_timestamp, timeout_val=REQUEST_TIMEOUT_SECONDS):
     """
     Отправляет запрос к API Девмана для получения списка проверок.
      Args:

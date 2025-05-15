@@ -1,10 +1,9 @@
 import time
-from pprint import pprint
 
 import requests
 from environs import Env, EnvError
 
-from api_devman import get_devman_review_with_polling
+from api_devman import get_devman_reviews
 from send_telegram_message import (format_review_notification,
                                    send_telegram_greeting)
 
@@ -28,7 +27,7 @@ def main():
     while True:
         print('--------------------------Начинаем постоянный опрос сервера ------------------------')
         try:
-            devman_response = get_devman_review_with_polling(devman_longpoiling_url, DEVMAN_TOKEN, current_timestamp)
+            devman_response = get_devman_reviews(devman_longpoiling_url, DEVMAN_TOKEN, current_timestamp)
             status = devman_response.get('status')
             print(f'--- Ответ API получен, статус: {status} ---')
 
