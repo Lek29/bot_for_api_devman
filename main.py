@@ -7,6 +7,7 @@ from api_devman import get_devman_reviews
 from send_telegram_message import (format_review_notification,
                                    send_telegram_greeting)
 
+
 DEVMAN_LONGPOILING_URL = 'https://dvmn.org/api/long_polling/'
 
 
@@ -36,27 +37,23 @@ def main():
                 current_timestamp = devman_response.get('last_attempt_timestamp', 'ошибка получения current_timestamp')
                 new_attempts = devman_response.get('new_attempts', [])
 
-                if isinstance(new_attempts, list):
-                    for attempt in new_attempts:
-                        result_check = format_review_notification(attempt)
-                        print('---- Детали новых проверок ----')
-                        success, telegram_dispatch_details = (
-                            send_telegram_greeting(
-                                message_text=result_check,
-                                bot_token=telegram_bot_token,
-                                chat_id=telegram_chat_id
-                            )
+                for attempt in new_attempts:
+                    result_check = format_review_notification(attempt)
+                    print('---- Детали новых проверок ----')
+                    success, telegram_dispatch_details = (
+                        send_telegram_greeting(
+                            message_text=result_check,
+                            bot_token=telegram_bot_token,
+                            chat_id=telegram_chat_id
                         )
-                        if success:
-                            print(telegram_dispatch_details)
-                        else:
-                            print(f'Ошибка отправки сообщения в Telegram: {telegram_dispatch_details}')
-                else:
-                    print(f'new_attempts не является списком. Получено {type(new_attempts)}')
+                    )
+                    if success:
+                        print(telegram_dispatch_details)
+                    else:
+                        print(f'Ошибка отправки сообщения в Telegram: {telegram_dispatch_details}')
             elif status == 'timeout':
                 print('Новых проверок нет. Делаем новый запрос.')
                 current_timestamp = devman_response.get('timestamp_to_request')
-
 
         except requests.exceptions.ReadTimeout:
             pass
