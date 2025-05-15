@@ -40,7 +40,6 @@ def main():
                     for attempt in new_attempts:
                         result_check = format_review_notification(attempt)
                         print('---- Детали новых проверок ----')
-                        pprint(new_attempts)
                         success, telegram_dispatch_details = (
                             send_telegram_greeting(
                                 message_text=result_check,
@@ -57,7 +56,7 @@ def main():
             elif status == 'timeout':
                 print('Новых проверок нет. Делаем новый запрос.')
                 current_timestamp = devman_response.get('timestump_to_requsts')
-            pprint(devman_response)
+
 
         except requests.exceptions.ReadTimeout as e:
             print(f'Ошибка. Сервер не ответил за необходимое время. Ошибка {e}')
