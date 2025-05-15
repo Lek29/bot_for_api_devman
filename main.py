@@ -8,8 +8,6 @@ from api_devman import get_devman_review_with_polling
 from send_telegram_message import (format_review_notification,
                                    send_telegram_greeting)
 
-
-
 devman_longpoiling_url = 'https://dvmn.org/api/long_polling/'
 
 
@@ -43,11 +41,11 @@ def main():
                         result_check = format_review_notification(attempt)
                         print('---- Детали новых проверок ----')
                         pprint(new_attempts)
-                        success, telegram_dispatch_details =(
+                        success, telegram_dispatch_details = (
                             send_telegram_greeting(
-                            message_text=result_check,
-                            bot_token=TELEGRAM_BOT_TOKEN,
-                            chat_id=TELEGRAM_CHAT_ID
+                                message_text=result_check,
+                                bot_token=TELEGRAM_BOT_TOKEN,
+                                chat_id=TELEGRAM_CHAT_ID
                             )
                         )
                         if success:
