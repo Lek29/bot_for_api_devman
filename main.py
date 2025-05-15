@@ -8,35 +8,34 @@ from api_devman import get_devman_review_with_polling
 from send_telegram_message import (format_review_notification,
                                    send_telegram_greeting)
 
-env = Env()
-env.read_env()
 
 
 devman_longpoiling_url = 'https://dvmn.org/api/long_polling/'
-try:
-    DEVMAN_TOKEN = env.str('DEVMAN_TOKEN')
-    TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_TOKEN')
-    TELEGRAM_CHAT_ID = env.str('TELEGRAM_CHAT_ID')
-except EnvError as e:
-    print(f'Ошибка конфигурации в main.py: Не удалось загрузить одну из переменных '
-          f'(DEVMAN_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID). Ошибка: {e}')
 
 
 def main():
-    print(f'токен: {DEVMAN_TOKEN[:4]}')
-    print(f' Url: {devman_longpoiling_url}')
+    env = Env()
+    env.read_env()
 
-    current_timestump = None
+    try:
+        DEVMAN_TOKEN = env.str('DEVMAN_TOKEN')
+        TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_TOKEN')
+        TELEGRAM_CHAT_ID = env.str('TELEGRAM_CHAT_ID')
+    except EnvError as e:
+        print(f'Ошибка конфигурации в main.py: Не удалось загрузить одну из переменных '
+              f'(DEVMAN_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID). Ошибка: {e}')
+
+    current_timestamp = None
     while True:
         print('--------------------------Начинаем постоянный опрос сервера ------------------------')
         try:
-            devman_response = get_devman_review_with_polling(devman_longpoiling_url, DEVMAN_TOKEN, current_timestump)
+            devman_response = get_devman_review_with_polling(devman_longpoiling_url, DEVMAN_TOKEN, current_timestamp)
             status = devman_response['status']
             print(f'--- Ответ API получен, статус: {status} ---')
 
             if status == 'found':
                 print('Обнаружены новые проверки')
-                current_timestump = devman_response.get('last_attempt_timestamp', 'ошибка получения current_timestamp')
+                current_timestamp = devman_response.get('last_attempt_timestamp', 'ошибка получения current_timestamp')
                 new_attempts = devman_response.get('new_attempts', 'ошибка получения new_attempts')
 
                 if isinstance(new_attempts, list):
@@ -59,7 +58,7 @@ def main():
                     print(f'new_attempts не является списком. Получено {type(new_attempts)}')
             elif status == 'timeout':
                 print('Новых проверок нет. Делаем новый запрос.')
-                current_timestump = devman_response.get('timestump_to_requsts')
+                current_timestamp = devman_response.get('timestump_to_requsts')
             pprint(devman_response)
 
         except requests.exceptions.ReadTimeout as e:
