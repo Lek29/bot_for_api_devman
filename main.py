@@ -16,9 +16,9 @@ def main():
     env.read_env()
 
     try:
-        devman_token = env.str('devman_token')
+        devman_token = env.str('DEVMAN_TOKEN')
         telegram_bot_token = env.str('TELEGRAM_TOKEN')
-        telegram_chat_id = env.str('telegram_chat_id')
+        telegram_chat_id = env.str('TELEGRAM_CHAT_ID')
     except EnvError as e:
         print(f'Ошибка конфигурации в main.py: Не удалось загрузить одну из переменных '
               f'(devman_token, telegram_bot_token, telegram_chat_id). Ошибка: {e}')
