@@ -11,23 +11,7 @@ from telegram_logging_handler import TelegramLogsHandler
 
 DEVMAN_LONGPOILING_URL = 'https://dvmn.org/api/long_polling/'
 
-logger = logging.getLogger('devman_bot')
-logger.setLevel(logging.DEBUG)
-
-
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
-
-formater = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formater)
-
-logger.addHandler(console_handler)
-
-file_handler = logging.FileHandler('bot.log', mode='a', encoding='utf-8')
-file_handler.setLevel(logging.DEBUG)
-file_formater = logging.Formatter('%(asctime)s - %(levelname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s')
-file_handler.setFormatter(file_formater)
-logger.addHandler(file_handler)
+logger = logging.getLogger(__file__)
 
 
 def main():
@@ -44,16 +28,29 @@ def main():
 
     tg_bot = init_telegram_bot(telegram_bot_token)
 
+    logger.setLevel(logging.DEBUG)
+
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(console_formatter)
+    logger.addHandler(console_handler)
+
+    file_handler = logging.FileHandler('bot.log', mode='a', encoding='utf-8')
+    file_handler.setLevel(logging.DEBUG)
+    file_formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(module)s - %(funcName)s:%(lineno)d - %(message)s')
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(file_handler)
+
+
     if tg_bot:
         telegram_log_handler = TelegramLogsHandler(bot_instance=tg_bot, chat_id=telegram_chat_id)
         telegram_log_handler.setLevel(logging.ERROR)
-        telegram_formatter = logging.Formatter('%(levelname)s - %(name)s: %(message)s')
-        telegram_log_handler.setFormatter(telegram_formatter)
         logger.addHandler(telegram_log_handler)
         logger.info("Telegram-хэндлер для логов успешно добавлен.")
-
     else:
-        logger.critical("Не удалось инициализировать Telegram бота...")
+        logger.warning("Telegram бот не инициализирован, Telegram-хэндлер не будет добавлен.")
 
 
     current_timestamp = None
