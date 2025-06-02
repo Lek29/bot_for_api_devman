@@ -86,7 +86,7 @@ def main():
         except requests.exceptions.ReadTimeout:
             pass
         except requests.exceptions.ConnectionError as e:
-            logger.error(f"Ошибка соединения с Devman API: {e}", exc_info=True)
+            logger.exception(f"Ошибка соединения с Devman API: {e}")
             time.sleep(5)
 
 

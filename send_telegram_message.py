@@ -14,7 +14,7 @@ def init_telegram_bot(bot_token):
         module_logger.error('Ошибка: Неверный токен Telegram бота')
         return None
     except Exception as e:
-        module_logger.error(f'Не удалось инициализировать Telegram бота: {e}", exc_info=True')
+        module_logger.exception(f'Не удалось инициализировать Telegram бота: {e}')
         return None
 
 
@@ -27,7 +27,7 @@ def send_telegram_message(bot: telegram.Bot, chat_id, message_text):
         bot.send_message(chat_id=chat_id, text=message_text)
         return True, 'Сообщение удачно отправлено'
     except telegram.error.TelegramError as e:
-        module_logger.error(f"Ошибка Telegram при отправке сообщения в чат {chat_id}: {e}")
+        module_logger.exception(f"Ошибка Telegram при отправке сообщения в чат {chat_id}: {e}")
         return False, e
 
 
