@@ -84,7 +84,6 @@ def main():
                 current_timestamp = devman_response.get('timestamp_to_request')
 
         except requests.exceptions.ReadTimeout:
-            logger.warning("Тайм-аут при запросе к Devman API. Повторяем...")
             pass
         except requests.exceptions.ConnectionError as e:
             logger.error(f"Ошибка соединения с Devman API: {e}", exc_info=True)
